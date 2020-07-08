@@ -15,6 +15,10 @@ const routes = [
     path: '/login',
     name: 'loginPage',
     component: Login
+  },
+  {
+    path: '*',
+    redirect: '/'
   }
 ]
 
