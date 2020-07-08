@@ -10,7 +10,7 @@
       </div>
 
       <div>
-        <label for="">Title</label>
+        <label for="">Description</label>
         <textarea v-model="selectedTodo.description" type="text" />
       </div>
 
@@ -24,7 +24,7 @@
       </div>
 
       <div>
-        <label for="">Title</label>
+        <label for="">Description</label>
         <textarea v-model="description" type="text" />
       </div>
 
@@ -72,7 +72,14 @@ export default {
       todo.description = ev.target[1].value;
       localStorage.setItem("todos", JSON.stringify(todos));
 
+      this.todo = "";
+      this.clearSelectedTodo();
       this.closeForm();
+    },
+
+    clearSelectedTodo() {
+      
+      this.$emit("clearSelected", null );
     },
 
     closeForm() {

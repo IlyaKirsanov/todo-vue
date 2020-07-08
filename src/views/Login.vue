@@ -1,7 +1,6 @@
 <template>
-  <div class="about">
+  <div>
     <Header></Header>
-    <h1>This is login page</h1>
     <LoginForm></LoginForm>
   </div>
 </template>
