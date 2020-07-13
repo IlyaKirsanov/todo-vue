@@ -21,7 +21,7 @@
     text-align: center;
     color: #2c3e50;
     background: url('./assets/background.png') 0 0/cover no-repeat fixed;
-    height: 100vh;
+    min-height: 100vh;
   }
 
   #nav {
