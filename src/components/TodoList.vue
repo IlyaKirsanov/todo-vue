@@ -1,6 +1,6 @@
 <template>
   <div class="todolist-container">
-    <h1>ToDo List Component</h1>
+    <h1>List of Todos</h1>
     <hr>
     <div>
       <h2 v-if="todos.length===0">{{message}}</h2>
@@ -10,13 +10,14 @@
         <div :key="todo.id" class="card" v-for="(todo, index) in todos">
 
           <div class="card-controls">
-            <button @click="selectTodoItem(index)" class="button-icon"><i class="fa fa-pencil"></i></button>
-            <button @click="removeTodo(index)" class="button-icon"><i class="fa fa-trash"></i></button>
+            <button @click="selectTodoItem(index)" class="btn button-icon button-icon__edit"><i class="fa fa-pencil"></i></button>
+            <button @click="removeTodo(index)" class="btn button-icon button-icon__trash"><i class="fa fa-trash"></i></button>
           </div>
 
           <div class="card-content">
-            <h3 class="title">{{ todo.title }}</h3>
+            <h3 class="title">{{ index+1 }}. {{ todo.title }}</h3>
             <p class="description">{{ todo.description }}</p>
+            <span>{{todo.createDate}}</span>
           </div>
 
         </div>
@@ -83,10 +84,18 @@
 
   .layout {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));;
+    justify-items: center;
+    grid-gap: .5em;
     margin: 0 auto;
     padding: 0;
+  }
+
+  @media (max-width: 500px) {
+    .layout {
+      grid-template-columns: repeat(1, 1fr);
+
+    }
   }
 
   .card {
@@ -118,11 +127,14 @@
 
       .title {
         margin-top: 10px;
+        word-wrap: break-word;
       }
 
       .description {
-        margin: 5px 0;
-        flex: 0 1 100px;
+        word-wrap: break-word;
+
+        min-height: 150px;
+        padding: 10px 0;
       }
     }
 
@@ -139,27 +151,4 @@
     margin: 20px 0 0;
   }
 
-
-  /* .todolist-container {
-    width: 80%;
-    margin: 0 auto;
-  }
-
-  .layout {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -5px;
-    justify-content: center;
-    flex: 0 0 auto;
-  }
-
-  .card {
-    padding: 10px 15px;
-    margin: 10px;
-    background-color: #ccc;
-    border: 1px solid #000;
-  }
-  h2 {
-    margin: 40px 0 0;
-  } */
 </style>

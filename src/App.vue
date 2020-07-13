@@ -91,7 +91,7 @@
   }
 
   .button-icon {
-    background-color: #001221;
+
     margin-right: 10px;
     border: none;
     color: #ccc;
@@ -110,11 +110,23 @@
   }
 
   .button-icon__add {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     right: 20px;
     border-radius: 50%;
 
+  }
+
+  .button-icon__edit{
+    &:hover{
+      background-color: #42b983;
+    }
+  }
+
+  .button-icon__trash{
+     &:hover{
+       background-color: #e14141;
+     }
   }
 
   .button-icon__times {

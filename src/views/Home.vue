@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <Header :email="userData.email"></Header>
-<!--    <TodoList :defaultTodos="userData.todos"/>-->
     <TodoList/>
   </div>
 </template>

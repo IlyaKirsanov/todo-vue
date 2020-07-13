@@ -48,7 +48,7 @@ export default new Vuex.Store({
         title: payload.title,
         description: payload.description,
         isDone: false,
-        createDate: new Date(),
+        createDate: new Date().toLocaleDateString(),
       });
     },
     removeTodo: (state, payload) => {
