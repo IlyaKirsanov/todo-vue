@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <button @click="toggleTodoForm" class="trigger button-icon button-icon__add"><i class="fa fa-plus"></i></button>
+    <button @click="toggleTodoForm" class="btn button-icon__add"><i class="fa fa-plus"></i></button>
 
     <TodoForm v-if="showTodoForm === true"></TodoForm>
   </div>
@@ -44,7 +44,7 @@
         message: '',
       };
     },
-    beforeCreate() {
+    beforeMount() {
       const data = localStorage.getItem("todos");
       if (data) {
         this.$store.dispatch("setTodosFromStorage", JSON.parse(data));
@@ -52,7 +52,7 @@
     },
 
     mounted() {
-      const todoList = this.$store.getters.todos;
+      const todoList = this.todos;
       if (todoList.length === 0) {
         this.message = 'Add new Todo'
       }
@@ -69,11 +69,6 @@
         'removeTodo',
         'selectTodoItem',
       ]),
-      //!todo
-      // editTodo(index) {
-      //   this.selectedTodo = this.todos[index];
-      //   this.showTodoForm = true;
-      // },
     },
   };
 </script>

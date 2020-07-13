@@ -3,7 +3,7 @@
     <h2>ToDo Application</h2>
     <div class="header__content">
       <span >{{ userEmail }}</span>
-      <button class="button" @click="clearData" v-if="userEmail">Log Out</button>
+      <button class="btn" @click="clearData" v-if="userEmail">Log Out</button>
     </div>
   </div>
 </template>
@@ -29,12 +29,13 @@ export default {
 .header{
   height: 80px;
   background-color: #273849;
-  padding: 20px;
+  padding: 10px;
   color: #fff;
   box-shadow: 0 5px 5px rgba(0,0,0,.3);
   &__content{
-    margin: -25px 20px 0 20px;
+    margin: -20px 20px 0 20px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
 
     span{

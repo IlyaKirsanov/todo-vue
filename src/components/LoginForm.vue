@@ -6,22 +6,21 @@
       <form>
 
         <div class="field">
-          <label for="">Email</label>
-          <label>
-            <input
-                :class="{ error: isEmailError }"
-                @blur="isEmailTouched = true"
-                type="text"
-                v-model="userEmail"
-            />
-          </label>
+          <label for="login">Email</label>
+          <input :class="{ error: isEmailError }"
+                 @blur="isEmailTouched = true"
+                 id="login"
+                 type="email"
+                 v-model="userEmail"
+          />
+
         </div>
 
         <div class="error-message" v-show="isEmailError">
           Please input valid email
         </div>
 
-        <button :disabled="!isEmailValid" @click.prevent="submitUser()" class="button" type="submit">
+        <button :disabled="!isEmailValid" @click.prevent="submitUser()" class="btn" type="submit">
           Submit
         </button>
       </form>
@@ -41,7 +40,7 @@
     beforeCreate() {
       const email = JSON.parse(localStorage.getItem("email"));
       if (email) {
-        alert("You already submit Login Form");
+        alert("You are already submit Login Form");
         this.$router.push("/");
       }
     },
@@ -71,7 +70,7 @@
         if (!this.isEmailValid) {
           return;
         }
-        this.$store.dispatch("setUserEmailToStorage", this.$store.getters.userEmail);
+        this.$store.dispatch("setUserEmailToStorage", this.userEmail);
         alert("Email successful submitted");
         this.$router.push("/");
       },
@@ -108,26 +107,6 @@
       }
     }
   }
-
-  .field {
-    margin-bottom: 24px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .field > label {
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-
-  .field > input {
-
-    padding: 5px 10px;
-    font-size: 20px;
-    border-radius: 5px;
-  }
-
 
   .error {
     border-color: red;
