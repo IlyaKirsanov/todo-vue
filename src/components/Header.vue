@@ -2,21 +2,25 @@
   <div class="header">
     <h2>ToDo Application</h2>
     <div class="header__content">
-      <span >{{ email }}</span>
-      <button class="button" @click="logout" v-if="email">Log Out</button>
+      <span >{{ userEmail }}</span>
+      <button class="button" @click="clearData" v-if="userEmail">Log Out</button>
     </div>
   </div>
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
-  props: ["email"],
+  computed:{
+    userEmail(){
+      return JSON.parse(localStorage.getItem("email"))
+    }
+  },
   methods: {
-    logout() {
-      localStorage.removeItem("email");
-      localStorage.removeItem("todos");
-      this.$router.push("/login");
-    },
+    ...mapActions([
+      'clearData'
+    ])
   },
 };
 </script>
