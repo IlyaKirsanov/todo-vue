@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userEmail: '',
+    //!todo
     todoItem: TodoModel,
     todos: Array<TodoModel>(),
     showTodoForm: false
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     },
     showTodoForm: state => {
       state.showTodoForm = !state.showTodoForm;
+      //!todo
       state.todoItem = TodoModel;
     },
     setTodoItem: (state, payload) => {
@@ -43,17 +45,22 @@ export default new Vuex.Store({
     updateLocalStorage: (state) => {
       localStorage.setItem("todos", JSON.stringify(state.todos));
     },
+
+    //!todo
     addNewTodo: (state, todoModel: TodoModel) => {
       state.todos.push(todoModel);
     },
     removeTodo: (state, payload) => {
       state.todos.splice(payload, 1);
     },
+
+    //!todo
     selectTodoItem: (state, payload:number) => {
       let item: any = state.todos[payload];
       state.todoItem = item;
     },
     updateTodoItem: (state, payload) => {
+      //!todo
       const todo: any = state.todos.find((todo) => {
         return todo.id === payload.id;
       });
@@ -66,6 +73,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    //
     setUserEmail: (context, payload) => {
       context.commit("setUserEmail", payload);
     },
@@ -82,10 +90,11 @@ export default new Vuex.Store({
     setTodosFromStorage: (context, payload) => {
       context.commit("setTodos", payload);
     },
-    addNewTodo: (context, payload) => {
+    //!todo
+    addNewTodo: (context, todoModel: TodoModel) => {
       try {
-        if (payload.title !== "" && payload.description !== "") {
-          context.commit("addNewTodo", payload);
+        if (todoModel.title !== "" && todoModel.description !== "") {
+          context.commit("addNewTodo", todoModel);
           context.commit("showTodoForm")
           context.commit("updateLocalStorage")
           alert('New todo created')
