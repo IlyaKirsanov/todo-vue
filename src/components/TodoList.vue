@@ -1,35 +1,38 @@
 <template>
   <div class="todolist-container">
-    <h1>List of Todos</h1>
-    <hr>
     <div>
-      <h2 v-if="todos.length===0">{{message}}</h2>
-
-      <div class="layout" v-else>
-
-        <div :key="todo.id" class="card" v-for="(todo, index) in todos">
-
-          <div class="card-controls">
-            <button @click="selectTodoItem(index)" class="btn button-icon button-icon__edit"><i class="fa fa-pencil"></i></button>
-            <button @click="removeTodo(index)" class="btn button-icon button-icon__trash"><i class="fa fa-trash"></i></button>
-          </div>
-
-          <div class="card-content">
-            <h3 class="title">{{ index+1 }}. {{ todo.title }}</h3>
-            <p class="description">{{ todo.description }}</p>
-            <div class="image-container">
-
-              <img :src="todo.imageUrl" alt="img" />
+      <div>
+       <ul class="list-nav">
+         <li><h3>{{column.colTitle}}</h3></li>
+         <li>
+         <button :disabled="column.todoList.length!==0" v-show="column.colTitle !== 'Trash' && column.colTitle !=='New Todos'" @click="removeColumn"  class="btn button-icon "><i class="fa fa-trash"></i>
+        </button>
+         </li>
+       </ul>
+        <p v-show="column.colTitle ==='New Todos' && column.todoList.length===0">Create New Todo</p>
+        <draggable ghost-class="ghost-card" :animation="200" :list="column.todoList" @end="updateLocalStorage" class="layout" group="todoList" tag="ul">
+          <li :key="todo.id" class="card" v-for="(todo,index) in column.todoList">
+            <div class="card-controls">
+              <button @click="selectTodoItem(index)" class="btn button-icon button-icon__edit"><i
+                  class="fa fa-pencil"></i></button>
+              <button @click="removeTodo(index)" class="btn button-icon button-icon__trash"><i class="fa fa-trash"></i>
+              </button>
             </div>
-            <span>{{todo.createDate}}</span>
-          </div>
-
-        </div>
+            <div class="card-content">
+              <h3 class="title" :class="{trash : column.colTitle === 'Trash'}">{{ todo.title }}</h3>
+              <div v-if="column.colTitle !== 'Trash'">
+                <p class="description">{{ todo.description }}</p>
+                <div class="image-container">
+                  <img :src="todo.imageUrl" alt="img"/>
+                </div>
+                <span>{{todo.createDate}}</span>
+              </div>
+            </div>
+          </li>
+        </draggable>
       </div>
     </div>
-
     <button @click="toggleTodoForm" class="btn button-icon__add"><i class="fa fa-plus"></i></button>
-
     <TodoForm v-if="showTodoForm === true"></TodoForm>
   </div>
 </template>
@@ -37,78 +40,93 @@
 <script>
   import {mapActions, mapGetters} from "vuex";
   import TodoForm from "@/components/TodoForm";
+  import draggable from "vuedraggable";
 
   export default {
-
+    props: ['column', 'colIndex'],
     components: {
       TodoForm,
+      draggable,
     },
     name: "TodoList",
-    data() {
-      return {
-        message: '',
-      };
-    },
-    beforeMount() {
-      const data = localStorage.getItem("todos");
-      if (data) {
-        this.$store.dispatch("setTodosFromStorage", JSON.parse(data));
-      }
-    },
-
-    mounted() {
-      const todoList = this.todos;
-      if (todoList.length === 0) {
-        this.message = 'Add new Todo'
-      }
-    },
     computed: {
       ...mapGetters([
         'todos',
-        'showTodoForm'
+        'showTodoForm',
+        'columns'
       ])
     },
     methods: {
-      ...mapActions([
-        'toggleTodoForm',
-        'removeTodo',
-        'selectTodoItem',
-      ]),
+      ...mapActions({
+        toggleTodoForm: 'toggleTodoForm',
+        selectTodoItemToUpdate: 'selectTodoItem',
+        removeTodoFromColumn: 'removeTodo',
+        updateLocalStorage: 'updateLocalStorage',
+        removeColumn: 'removeColumn'
+      }),
+      removeTodo(index) {
+        const payload = {
+          colIndex: this.colIndex,
+          todoIndex: index
+        }
+        this.removeTodoFromColumn(payload);
+      },
+      selectTodoItem(index) {
+        const payload = {
+          colIndex: this.colIndex,
+          todoIndex: index
+        }
+        this.selectTodoItemToUpdate(payload);
+      },
+      removeColumn(){
+        this.$store.dispatch('removeColumn',this.colIndex);
+      }
     },
   };
 </script>
 
 <style lang="scss" scoped>
+
+  .list-nav{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+
+    li{
+      margin-right: 10px;
+    }
+  }
+
+  draggable{
+   margin: 0 auto;
+  }
   .todolist-container {
     width: 90%;
     margin: 0 auto;
     padding: 0.5em 0;
-
   }
-
   .layout {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 300px));;
-    justify-items: center;
+    justify-content: center;
     grid-gap: .5em;
     margin: 0 auto;
     padding: 0;
   }
-
   @media (max-width: 500px) {
     .layout {
       grid-template-columns: repeat(1, 1fr);
 
     }
   }
-
   .card {
+    cursor:move;
     margin: 1%;
     width: 90%;
-
     background-color: #ccc;
     border: 2px solid rgb(173, 223, 169);
-
     display: flex;
     flex-direction: column;
 
@@ -122,7 +140,6 @@
     }
 
     .card-content {
-
       text-align: left;
       width: 90%;
       margin: 0 auto;
@@ -136,7 +153,6 @@
 
       .description {
         word-wrap: break-word;
-
         min-height: 50px;
         padding: 10px 0;
       }
@@ -157,6 +173,11 @@
           display: block;
         }
       }
+      .trash{
+        color: rgba(0,0,0,.5);
+        opacity: .7;
+        text-decoration: line-through;
+      }
     }
 
     &:last-of-type {
@@ -170,6 +191,12 @@
 
   h2 {
     margin: 20px 0 0;
+  }
+
+  .ghost-card {
+    opacity: 0.5;
+    background: #F7FAFC;
+    border: 1px solid #4299e1;
   }
 
 </style>

@@ -75,6 +75,7 @@
     background-color: DodgerBlue;
     border: none;
     color: white;
+    margin: 0 10px;
     padding: 12px 16px;
     font-size: 16px;
     cursor: pointer;
@@ -95,9 +96,9 @@
     margin-right: 10px;
     border: none;
     color: #ccc;
-    width: 50px;
-    height: 50px;
-    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     display: flex;

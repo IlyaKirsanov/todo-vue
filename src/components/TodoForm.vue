@@ -11,8 +11,7 @@
     <transition appear name="slide">
       <div class="modal" v-if="showTodoForm">
         <form>
-          <span @click.prevent="toggleTodoForm" class="button-icon__times"
-          ><i class="fa fa-times"></i
+          <span @click.prevent="toggleTodoForm" class="button-icon__times"><i class="fa fa-times"></i
           ></span>
           <h2 class="form-header">Todo form</h2>
 
@@ -27,21 +26,15 @@
           </div>
 
           <div class="field image-container">
-
             <img :src="todoItem.id ? todoItem.imageUrl : image" alt="img" />
-
           </div>
 
-<!--          <div class="field">-->
-<!--            <label for="image">Image</label>-->
-<!--            <input id="image" type="text" :value="image" v-model="todoItem.imageUrl" />-->
-<!--          </div>-->
-
           <div class="form-footer">
+
             <button v-if="!todoItem.id" @click.prevent="getRandomImage" class="btn">
               Next image
             </button>
-<!--            @click.prevent="updateTodoItem(todoItem)"-->
+
             <button
                 @click.prevent="updateTodoItem(todoItem)"
                 class="btn"
@@ -50,9 +43,8 @@
             >
               Update todo
             </button>
-<!--            @click.prevent="addNewTodo(todoItem)"-->
-            <button
 
+            <button
                 @click.prevent="addNewTodo(todoItem)"
                 class="btn"
                 type="submit"
@@ -99,15 +91,6 @@
         }
         this.creteNewTodo(payload);
       },
-      // updateTodoItem(){
-      //   const payload = {
-      //       title: this.todoItem.title,
-      //       description: this.todoItem.description,
-      //       imageUrl: this.image
-      //   }
-      //   this.editTodoItem(payload);
-      // },
-
       getRandomImage() {
         axios.get("https://dog.ceo/api/breeds/image/random").then(res => {
           console.log(res);
@@ -126,7 +109,7 @@
     right: 0;
     bottom: 0;
     z-index: 98;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.3);
   }
 
   .modal {

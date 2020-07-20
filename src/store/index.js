@@ -1,12 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router/index'
+import {console} from "vuedraggable/src/util/helper";
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     userEmail: '',
+    columns: [
+      {colTitle: 'New Todos', todoList: []},
+      {colTitle: 'Trash', todoList: []},
+    ],
     todoItem: {},
     todos: [],
     showTodoForm: false
@@ -23,6 +28,9 @@ export default new Vuex.Store({
     },
     showTodoForm: state => {
       return state.showTodoForm
+    },
+    columns: state => {
+      return state.columns
     }
   },
   mutations: {
@@ -37,13 +45,15 @@ export default new Vuex.Store({
       state.todoItem = payload
     },
     setTodos: (state, payload) => {
-      state.todos = payload
+      state.columns = payload;
+
     },
     updateLocalStorage: (state) => {
-      localStorage.setItem("todos", JSON.stringify(state.todos));
+      localStorage.setItem("columns", JSON.stringify(state.columns));
     },
     addNewTodo: (state, payload) => {
-      state.todos.push({
+      console.log(payload)
+      state.columns[0].todoList.push({
         id: Math.floor(Math.random() * 100000000),
         title: payload.title,
         description: payload.description,
@@ -51,24 +61,53 @@ export default new Vuex.Store({
         isDone: false,
         createDate: new Date().toLocaleDateString(),
       });
+      console.log( state.columns[0].todoList[0])
     },
     removeTodo: (state, payload) => {
-      state.todos.splice(payload, 1);
+      state.columns[payload.colIndex].todoList.splice([payload.todoIndex],1);
     },
     selectTodoItem: (state, payload) => {
-      state.todoItem = state.todos[payload];
+      state.todoItem =  state.columns[payload.colIndex].todoList[payload.todoIndex];
     },
     updateTodoItem: (state, payload) => {
-      const todo = state.todos.find((todo) => {
-        return todo.id === payload.id;
-      });
-      todo.title = payload.title;
-      todo.description = payload.description;
+
+      for(let column of state.columns){
+        //console.log(column.todoList)
+        column.todoList.find((todo) => {
+          //console.log(todo.id === payload.id)
+          if(todo.id === payload.id){
+            todo.title = payload.title;
+            todo.description = payload.description;
+            return
+          }
+
+        });
+
+
+      }
+      //console.log(todo)
+      // todo.title = payload.title;
+      // todo.description = payload.description;
 
     },
     clearState: state => {
       state.todos = []
       state.userEmail = ''
+    },
+    createNewColumn: (state, payload) => {
+      state.columns.splice(state.columns.length-1, 0, {
+        colTitle: payload,
+        todoList: []
+      })
+    },
+    removeColumn: (state, payload) => {
+      if(confirm("Do you really want to delete?")){
+        if(state.columns[payload].todoList.length !== 0){
+          alert(`This list is not empty, delete forbidden`)
+        }else{
+          state.columns.splice(payload,1)
+        }
+      }
     }
   },
   actions: {
@@ -92,6 +131,7 @@ export default new Vuex.Store({
     addNewTodo: (context, payload) => {
       try {
         if (payload.title !== "" && payload.description !== "") {
+          console.log(payload)
           context.commit("addNewTodo", payload);
           context.commit("showTodoForm")
           context.commit("updateLocalStorage")
@@ -107,12 +147,10 @@ export default new Vuex.Store({
         context.commit("removeTodo", payload);
         context.commit("updateLocalStorage")
       }
-
     },
     selectTodoItem: (context, payload) => {
       context.commit("showTodoForm")
       context.commit("selectTodoItem", payload)
-
     },
     updateTodoItem:(context,payload) =>{
       context.commit("updateTodoItem", payload)
@@ -120,10 +158,28 @@ export default new Vuex.Store({
       context.commit("showTodoForm")
       alert('Your todo item has been updated')
     },
+    updateLocalStorage: ({commit})=>{
+      commit("updateLocalStorage")
+    },
     clearData: (context) => {
       context.commit("clearState")
       localStorage.clear();
       router.push("/login");
+    },
+    createNewColumn: ({commit}, payload) => {
+      try {
+        if (payload.colTitle !== "") {
+          commit("createNewColumn", payload);
+          commit("updateLocalStorage")
+          alert('New list created')
+        }
+      }catch (e) {
+        alert("Something went wrong")
+      }
+    },
+    removeColumn: ({commit}, payload)=>{
+      commit('removeColumn', payload)
+      commit("updateLocalStorage")
     }
   }
 })
