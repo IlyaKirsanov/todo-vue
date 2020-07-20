@@ -1,69 +1,124 @@
 <template>
   <div id="form">
     <transition appear name="fade">
-      <div @click.prevent="toggleTodoForm" class="modal-overlay" v-if="showTodoForm"></div>
+      <div
+          @click.prevent="toggleTodoForm"
+          class="modal-overlay"
+          v-if="showTodoForm"
+      ></div>
     </transition>
 
     <transition appear name="slide">
       <div class="modal" v-if="showTodoForm">
         <form>
-          <span @click.prevent="toggleTodoForm" class="button-icon__times"><i class="fa fa-times"></i></span>
+          <span @click.prevent="toggleTodoForm" class="button-icon__times"
+          ><i class="fa fa-times"></i
+          ></span>
           <h2 class="form-header">Todo form</h2>
 
           <div class="field">
             <label for="title">Title</label>
-            <input id="title" type="text" v-model="todoItem.title"/>
+            <input id="title" type="text" v-model="todoItem.title" />
           </div>
 
           <div class="field">
             <label for="description">Description</label>
-            <textarea id="description" v-model="todoItem.description"/>
+            <textarea id="description" v-model="todoItem.description" />
           </div>
 
+          <div class="field image-container">
+
+            <img :src="todoItem.id ? todoItem.imageUrl : image" alt="img" />
+
+          </div>
+
+<!--          <div class="field">-->
+<!--            <label for="image">Image</label>-->
+<!--            <input id="image" type="text" :value="image" v-model="todoItem.imageUrl" />-->
+<!--          </div>-->
+
           <div class="form-footer">
-            <button @click.prevent="updateTodoItem(todoItem)" class="btn" type="submit" v-if="todoItem.id">Update
-              todo
+            <button v-if="!todoItem.id" @click.prevent="getRandomImage" class="btn">
+              Next image
             </button>
-            <button @click.prevent="addNewTodo(todoItem)" class="btn" type="submit" v-else>Add new todo</button>
+<!--            @click.prevent="updateTodoItem(todoItem)"-->
+            <button
+                @click.prevent="updateTodoItem(todoItem)"
+                class="btn"
+                type="submit"
+                v-if="todoItem.id"
+            >
+              Update todo
+            </button>
+<!--            @click.prevent="addNewTodo(todoItem)"-->
+            <button
+
+                @click.prevent="addNewTodo(todoItem)"
+                class="btn"
+                type="submit"
+                v-else
+            >
+              Add new todo
+            </button>
           </div>
         </form>
       </div>
     </transition>
-
   </div>
-
 </template>
 
 <script>
-  import {mapActions, mapGetters} from 'vuex';
-
+  import { mapActions, mapGetters } from "vuex";
+  import axios from "axios";
   export default {
-    props: ["todos", "selectedTodo",],
+    props: ["todos", "selectedTodo"],
+    data() {
+      return {
+        image: ""
+      };
+    },
+    created() {
+      axios.get("https://dog.ceo/api/breeds/image/random").then(res => {
+        console.log(res);
+        this.image = res.data.message;
+      });
+    },
     computed: {
-      ...mapGetters(
-        ['todoItem', 'showTodoForm']
-      )
+      ...mapGetters({
+        todoItem: "todoItem",
+        showTodoForm: "showTodoForm"
+      })
     },
     methods: {
-      ...mapActions([
-        'addNewTodo',
-        'updateTodoItem',
-        'toggleTodoForm'
-      ])
+      ...mapActions({creteNewTodo:"addNewTodo", updateTodoItem:"updateTodoItem", toggleTodoForm:"toggleTodoForm"}),
+      addNewTodo(){
+        const payload = {
+          title: this.todoItem.title,
+          description: this.todoItem.description,
+          imageUrl: this.image
+        }
+        this.creteNewTodo(payload);
+      },
+      // updateTodoItem(){
+      //   const payload = {
+      //       title: this.todoItem.title,
+      //       description: this.todoItem.description,
+      //       imageUrl: this.image
+      //   }
+      //   this.editTodoItem(payload);
+      // },
+
+      getRandomImage() {
+        axios.get("https://dog.ceo/api/breeds/image/random").then(res => {
+          console.log(res);
+          this.image = res.data.message;
+        });
+      }
     }
-  }
-  ;
+  };
 </script>
 
-
 <style lang="scss">
-  form {
-    height: 100vh;
-    padding: 20px ;
-    width: 100%;
-
-  }
-
   .modal-overlay {
     position: absolute;
     top: 0;
@@ -78,8 +133,8 @@
     display: flex;
     height: 100vh;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     width: 100%;
     border: 1px solid black;
     position: fixed;
@@ -88,15 +143,37 @@
     z-index: 99;
 
     max-width: 400px;
-    background-color: #FFF;
+    background-color: #fff;
 
-    span{
+    form {
+      height: 80vh;
+      padding: 10px;
+      width: 100%;
+    }
+
+    span {
       font-size: 24px;
       padding: 20px;
     }
 
-    textarea{
+    textarea {
+      height: 20vh;
+    }
+
+    .image-container {
+      display: block;
+      width: 100%;
       height: 30vh;
+
+      & > img {
+        object-fit: contain;
+
+        width: 100%;
+        height: 100%;
+
+        max-height: 100%;
+        max-width: 100%;
+      }
     }
   }
 
@@ -114,7 +191,7 @@
 
   .fade-enter-active,
   .fade-leave-active {
-    transition: opacity .5s;
+    transition: opacity 0.5s;
   }
 
   .fade-enter,
@@ -124,7 +201,7 @@
 
   .slide-enter-active,
   .slide-leave-active {
-    transition: transform .5s;
+    transition: transform 0.5s;
   }
 
   .slide-enter {
@@ -134,6 +211,4 @@
   .slide-leave-to {
     transform: translateX(50%);
   }
-
-
 </style>

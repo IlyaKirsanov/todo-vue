@@ -47,6 +47,7 @@ export default new Vuex.Store({
         id: Math.floor(Math.random() * 100000000),
         title: payload.title,
         description: payload.description,
+        imageUrl:payload.imageUrl,
         isDone: false,
         createDate: new Date().toLocaleDateString(),
       });
@@ -63,6 +64,7 @@ export default new Vuex.Store({
       });
       todo.title = payload.title;
       todo.description = payload.description;
+
     },
     clearState: state => {
       state.todos = []
@@ -88,15 +90,24 @@ export default new Vuex.Store({
       context.commit("setTodos", payload);
     },
     addNewTodo: (context, payload) => {
-      if (payload.title != "" && payload.description != "") {
-        context.commit("addNewTodo", payload);
-        context.commit("showTodoForm")
-        context.commit("updateLocalStorage")
+      try {
+        if (payload.title !== "" && payload.description !== "") {
+          context.commit("addNewTodo", payload);
+          context.commit("showTodoForm")
+          context.commit("updateLocalStorage")
+          alert('New todo created')
+        }
+      }catch (e) {
+        alert("Something went wrong")
       }
+
     },
     removeTodo: (context, payload) => {
-      context.commit("removeTodo", payload);
-      context.commit("updateLocalStorage")
+      if(confirm("Do you really want to delete?")){
+        context.commit("removeTodo", payload);
+        context.commit("updateLocalStorage")
+      }
+
     },
     selectTodoItem: (context, payload) => {
       context.commit("showTodoForm")
@@ -107,6 +118,7 @@ export default new Vuex.Store({
       context.commit("updateTodoItem", payload)
       context.commit("updateLocalStorage")
       context.commit("showTodoForm")
+      alert('Your todo item has been updated')
     },
     clearData: (context) => {
       context.commit("clearState")

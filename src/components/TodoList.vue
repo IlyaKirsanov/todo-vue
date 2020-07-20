@@ -17,6 +17,10 @@
           <div class="card-content">
             <h3 class="title">{{ index+1 }}. {{ todo.title }}</h3>
             <p class="description">{{ todo.description }}</p>
+            <div class="image-container">
+
+              <img :src="todo.imageUrl" alt="img" />
+            </div>
             <span>{{todo.createDate}}</span>
           </div>
 
@@ -84,7 +88,7 @@
 
   .layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));;
     justify-items: center;
     grid-gap: .5em;
     margin: 0 auto;
@@ -133,8 +137,25 @@
       .description {
         word-wrap: break-word;
 
-        min-height: 150px;
+        min-height: 50px;
         padding: 10px 0;
+      }
+
+      .image-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 20vh;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+
+
+        & > img {
+          object-fit: scale-down;
+          max-width: 100%;
+          max-height: 100%;
+          display: block;
+        }
       }
     }
 
