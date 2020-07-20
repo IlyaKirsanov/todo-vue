@@ -8,7 +8,7 @@
           </li>
           <li>
             <button
-              :disabled="column.todoList.length !== 0"
+
               v-show="
                 column.colTitle !== 'Trash' && column.colTitle !== 'New Todos'
               "
@@ -90,7 +90,7 @@ export default {
   },
   name: "TodoList",
   computed: {
-    ...mapGetters(["todos", "showTodoForm", "columns"])
+    ...mapGetters(["showTodoForm", "columns"])
   },
   methods: {
     ...mapActions({

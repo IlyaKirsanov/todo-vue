@@ -67,7 +67,7 @@
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 export default {
-  props: ["todos", "selectedTodo"],
+  props: ["selectedTodo"],
   data() {
     return {
       image: ""

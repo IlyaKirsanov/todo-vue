@@ -1,10 +1,10 @@
 <template>
   <div class="header">
     <div class="header-wrapper">
-      <h2>Todo Application</h2>
+      <h1>Todo Application</h1>
       <div class="header__content">
         <span>{{ userEmail }}</span>
-        <button @click="clearData" class="btn" v-if="userEmail">Log Out</button>
+        <button @click="clearState" class="btn" v-if="userEmail">Log Out</button>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["clearData"])
+    ...mapActions(["clearState"])
   }
 };
 </script>
