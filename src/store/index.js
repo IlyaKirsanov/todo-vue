@@ -86,7 +86,10 @@ export default new Vuex.Store({
       // todo.description = payload.description;
     },
     clearState: state => {
-      state.todos = [];
+      state.columns = [
+        { colTitle: "New Todos", todoList: [] },
+        { colTitle: "Trash", todoList: [] }
+      ];
       state.userEmail = "";
     },
     createNewColumn: (state, payload) => {
